@@ -1,0 +1,18 @@
+Package: readtwitter
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R: 
+    person("Matthew", "Katz", , "matthew.katz@dhsc.gov.uk", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Package to access and retrieve Tweets via the (paid) Twitter/X API, using either a set number of Tweets or a date range as parameters.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: checkmate,
+         DHSClogger,
+         httr, 
+         tidyverse
+URL: https://github.com/DataS-DHSC/readtwitter
+BugReports: https://github.com/DataS-DHSC/readtwitter/issues
+Remotes: DataS-DHSC/DHSClogger
