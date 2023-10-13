@@ -1,10 +1,3 @@
-
-if (!requireNamespace("librarian")) install.packages("librarian")
-librarian::shelf(
-  httr, tidyverse, checkmate
-)
-
-
 #' Get tweets for specified screen name
 #' 
 #' Return a data frame of tweets from a specified screen name. The function
@@ -16,7 +9,7 @@ librarian::shelf(
 #' 
 #' Referenced tweets refers to retweets, retweets with comments, and replies. 
 #' The API truncates the text on these tweets to 140 characters and so an
-#' additional `rerenced_tweets_text` field is added to the returned tibble.
+#' additional `referenced_tweets_text` field is added to the returned tibble.
 #'
 #' @param bearer_token character string giving the bearer token used for 
 #'   authorisation.
@@ -28,27 +21,26 @@ librarian::shelf(
 #'
 #' @return a tibble of the tweet data.
 #' @export
+#' @import dplyr
+#' @importFrom rlang .data
 #'
-#' @examples
-#' get_tweets(
-#'  Sys.getenv("BEARER_TOKEN"),
-#'  "BBCLauraK",
-#'   n = 5,
-#'   start_date = as.Date("2023-07-16") - 4,
-#'   end_date = as.Date("2023-07-16")
-#' )
+
+if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
+
 get_tweets <- function(bearer_token, screen_name, 
                        n = 100, start_date = NULL, end_date = NULL) {
+  
+  #referenced_tweets <- referenced_tweets_id <- text <- referenced_tweets_text <- NULL
   
   # function input validation
   min_date <- as.Date("2010-11-06")
   
-  assert_string(bearer_token)
-  assert_string(screen_name)
-  assert_count(n, positive = TRUE)
-  assert_date(start_date, lower = min_date, len = 1, null.ok = TRUE)
-  assert_date(end_date, lower = min_date, upper = Sys.Date(), 
-                 len = 1, null.ok = TRUE)
+  checkmate::assert_string(bearer_token)
+  checkmate::assert_string(screen_name)
+  checkmate::assert_count(n, positive = TRUE)
+  checkmate::assert_date(start_date, lower = min_date, len = 1, null.ok = TRUE)
+  checkmate::assert_date(end_date, lower = min_date, upper = Sys.Date(),
+                         len = 1, null.ok = TRUE)
   
   if (!is.null(start_date) && !is.null(end_date) && end_date <= start_date) {
     stop("`end_date` must be after `start_date`")
@@ -96,17 +88,17 @@ get_tweets <- function(bearer_token, screen_name,
     sprintf(
       'https://api.twitter.com/2/users/by/username/%s', screen_name
     ) %>% 
-    GET(
+    httr::GET(
       url = .,
-      add_headers(.headers = headers),
+      httr::add_headers(.headers = headers),
       query = list("user.fields" = "id")
     ) 
   
-  stop_for_status(response_raw, "get user id")
+  httr::stop_for_status(response_raw, "get user id")
   
   response <- response_raw %>% 
-    content(as = "text") %>% 
-    fromJSON(flatten = TRUE)
+    httr::content(as = "text") %>% 
+    jsonlite::fromJSON(flatten = TRUE)
   
   num_id <- response$data$id
   
@@ -157,17 +149,17 @@ get_tweets <- function(bearer_token, screen_name,
       sprintf(
         'https://api.twitter.com/2/users/%s/tweets', num_id
       ) %>% 
-      GET(
+      httr::GET(
         url = .,
-        add_headers(.headers = headers),
+        httr::add_headers(.headers = headers),
         query = query_list
       )
     
-    stop_for_status(response_raw, "read tweets")
+    httr::stop_for_status(response_raw, "read tweets")
     
     response <- response_raw %>% 
-      content(as = "text") %>% 
-      fromJSON(flatten = TRUE)
+      httr::content(as = "text") %>% 
+      jsonlite::fromJSON(flatten = TRUE)
     
     if (response$meta$result_count == 0) {
       warning("No tweets returned on last API call.")
@@ -181,18 +173,18 @@ get_tweets <- function(bearer_token, screen_name,
     # if there are referenced tweets add their text to the tibble
     if (!is.null(response$includes$tweets)) {
       df <- df %>% 
-        hoist(
-          referenced_tweets, referenced_tweets_id = "id", .remove = FALSE
+        tidyr::hoist(
+          .data$referenced_tweets, referenced_tweets_id = "id", .remove = FALSE
         ) %>%
-        unnest(referenced_tweets_id, keep_empty = TRUE)
+        tidyr::unnest(.data$referenced_tweets_id, keep_empty = TRUE)
       
       df_includes <- response$includes$tweets %>% 
         as_tibble() %>%
         mutate(
           referenced_tweets_id = id,
-          referenced_tweets_text = text
+          referenced_tweets_text = .data$text
         ) %>%
-        select(referenced_tweets_id, referenced_tweets_text)
+        select(.data$referenced_tweets_id, .data$referenced_tweets_text)
       
       df <- df %>%
         left_join(
@@ -235,3 +227,4 @@ get_tweets <- function(bearer_token, screen_name,
 #   start_date = as.Date("2023-07-16") - 4,
 #   end_date = as.Date("2023-07-16")
 # )
+

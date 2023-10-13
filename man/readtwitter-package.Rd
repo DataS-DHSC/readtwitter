@@ -4,7 +4,7 @@
 \name{readtwitter-package}
 \alias{readtwitter}
 \alias{readtwitter-package}
-\title{readtwitter: What the Package Does (One Line, Title Case)}
+\title{readtwitter: Read Tweets From Twitter}
 \description{
 Package to access and retrieve Tweets via the (paid) Twitter/X API, using either a set number of Tweets or a date range as parameters.
 }
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Matthew Katz \email{matthew.katz@dhsc.gov.uk} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Matthew Katz \email{matthew.katz@dhsc.gov.uk}
 
 }
 \keyword{internal}
