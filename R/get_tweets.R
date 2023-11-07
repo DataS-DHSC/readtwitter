@@ -1,3 +1,4 @@
+
 #' Get tweets for specified screen name
 #' 
 #' Return a data frame of tweets from a specified screen name. The function
@@ -86,7 +87,6 @@ get_tweets <- function(bearer_token, screen_name,
       'https://api.twitter.com/2/users/by/username/%s', screen_name
     ) %>% 
     httr::GET(
-      url = .,
       httr::add_headers(.headers = headers),
       query = list("user.fields" = "id")
     ) 
@@ -147,7 +147,6 @@ get_tweets <- function(bearer_token, screen_name,
         'https://api.twitter.com/2/users/%s/tweets', num_id
       ) %>% 
       httr::GET(
-        url = .,
         httr::add_headers(.headers = headers),
         query = query_list
       )
