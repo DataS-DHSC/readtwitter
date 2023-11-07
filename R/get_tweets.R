@@ -24,9 +24,6 @@
 #' @import dplyr
 #' @importFrom rlang .data
 #'
-
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
-
 get_tweets <- function(bearer_token, screen_name, 
                        n = 100, start_date = NULL, end_date = NULL) {
   
@@ -198,7 +195,7 @@ get_tweets <- function(bearer_token, screen_name,
         )
     }
      
-    df_list <- c(df_list, df)
+    df_list <- list(df_list, df)
 
     next_token <- response$meta$next_token
     
