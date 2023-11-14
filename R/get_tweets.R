@@ -194,7 +194,7 @@ get_tweets <- function(bearer_token, screen_name,
         )
     }
      
-    df_list <- list(df_list, df)
+    df_list <- c(df_list, list(df))
 
     next_token <- response$meta$next_token
     
