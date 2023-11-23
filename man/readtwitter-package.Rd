@@ -4,9 +4,12 @@
 \name{readtwitter-package}
 \alias{readtwitter}
 \alias{readtwitter-package}
-\title{readtwitter: Read Tweets From Twitter}
+\title{readtwitter: Collect Twitter data from R}
 \description{
-Package to access and retrieve Tweets via the (paid) Twitter/X API, using either a set number of Tweets or a date range as parameters.
+readtwitter is a simple wrapper for the Twitter API 2.0 endpoints.
+It's goal is to provide a stop gap solution while the rtweet package
+is updated to make it compatible with API 2.0. As such it tries to
+mimic signatures and functionality as much as possible.
 }
 \seealso{
 Useful links:
