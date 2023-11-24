@@ -27,12 +27,12 @@ user_liked_tweets <- function(token,
   # and replies
   params <- list(...)
   
-  if (is.null(params["tweet.fields"])) {
-    params["tweet.fields"] <- paste(tweet_fields, collapse = ",")
+  if (is.null(params[["tweet.fields"]])) {
+    params[["tweet.fields"]] <- paste(tweet_fields, collapse = ",")
   }
   
-  if (is.null(params["expansions"])) {
-    params["expansions"] <- "referenced_tweets.id"
+  if (is.null(params[["expansions"]])) {
+    params[["expansions"]] <- "referenced_tweets.id"
   }
   
   result <- api_paginate_cursor(token, api, params, n)

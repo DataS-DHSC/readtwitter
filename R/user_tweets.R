@@ -54,22 +54,22 @@ user_tweets <- function(token,
   # and replies
   params <- list(...)
 
-  if (is.null(params["tweet.fields"])) {
-    params["tweet.fields"] <- paste(tweet_fields, collapse = ",")
+  if (is.null(params[["tweet.fields"]])) {
+    params[["tweet.fields"]] <- paste(tweet_fields, collapse = ",")
   }
   
-  if (is.null(params["expansions"])) {
-    params["expansions"] <- "referenced_tweets.id"
+  if (is.null(params[["expansions"]])) {
+    params[["expansions"]] <- "referenced_tweets.id"
   }
 
   if (!is.null(start_date)) {
-    params["start_time"] <- format(start_date, "%Y-%m-%dT%H:%M:%SZ")
+    params[["start_time"]] <- format(start_date, "%Y-%m-%dT%H:%M:%SZ")
   }
   
   # as time is specified in API and date has a time of 00:00:00 add
   # one to the date so that all tweets from that day are included
   if (!is.null(end_date)) {
-    params["end_time"] <- format(end_date + 1, "%Y-%m-%dT%H:%M:%SZ")
+    params[["end_time"]] <- format(end_date + 1, "%Y-%m-%dT%H:%M:%SZ")
   }
   
   result <- api_paginate_cursor(token, api, params, n)
