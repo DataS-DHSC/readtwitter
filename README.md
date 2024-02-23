@@ -8,11 +8,12 @@
 This package can be used to access Twitter/X using its paid API 2.0.
 
 The code if heavily influenced by the
-[`rtweet`](https://github.com/ropensci/rtweet) package but makes use of
-the API 2.0 endpoint so is compatible with the Basic level of [paid
+[`rtweet`](https://github.com/ropensci/rtweet) package but is a
+simplified version focussed on the API 2.0 endpoint for the Pro level of
+[paid
 subscription](https://developer.twitter.com/en/docs/twitter-api/getting-started/about-twitter-api).
-The hope is that the next release of `rtweet` will have support for API
-2.0 endpoints making this package redundant.
+The latest feedback from `rtweet` is that the package will no longer be
+maintained going forward after it’s v2.0 release.
 
 This code has been developed in-house and not extensively tested. If you
 find any bugs or have suggestions of other functions to add, please

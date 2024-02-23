@@ -12,6 +12,3 @@
 ## usethis namespace: start
 ## usethis namespace: end
 NULL
-
-# oldest date tweets available for
-min_tweet_date <- as.Date("2010-11-06")
