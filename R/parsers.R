@@ -22,7 +22,7 @@ merge_resps <- function(x, y) {
       x[[i]] <- y_i
     } else if (is.data.frame(y_i)) {
       x[[i]] <- dplyr::bind_rows(x_i, y_i)
-    } else if(is.list(y_n)) {
+    } else if(is.list(y_i)) {
       x[[i]] <- merge_resps(x_i, y_i)
     } else {
       x[[i]] <- c(x_i, y_i)

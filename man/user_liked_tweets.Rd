@@ -4,7 +4,7 @@
 \alias{user_liked_tweets}
 \title{Get tweets a user has liked}
 \usage{
-user_liked_tweets(token, screen_name, ..., .n = Inf)
+user_liked_tweets(token, screen_name, ..., .n = Inf, .format = "parsed")
 }
 \arguments{
 \item{token}{optional character string giving a bearer token used for

@@ -96,3 +96,54 @@ tweets_search_all <- function(token,
   
   return(resps)
 }
+
+
+#' Title
+#'
+#' @param token 
+#' @param screen_name 
+#' @param keywords 
+#' @param ... 
+#' @param .n 
+#' @param .start_date 
+#' @param .end_date 
+#' @param .format 
+#' @param include_retweets 
+#' @param include_replies 
+#' @param include_quotes 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tweets_search_keywords <- function(token,
+                                   screen_name,
+                                   keywords,
+                                   ...,
+                                   include_retweets = TRUE,
+                                   include_replies = TRUE,
+                                   include_quotes = TRUE,
+                                   .n = Inf, 
+                                   .start_date = NULL, 
+                                   .end_date = NULL,
+                                   .format = "parsed") {
+  
+  checkmate::assert_string(screen_name)
+  checkmate::assert_list(keywords)
+  
+  if (identical(.format, "parsed")) .format <- parse_resps_tweets
+  
+  resps <- 
+    construct_search_queries(
+      screen_name,  keywords, include_retweets, include_replies, include_quotes
+    ) |>
+    sapply(
+      \(x) tweets_search_all(
+        token, x, ..., .n = .n, .start_date = .start_date, 
+        .end_date = .end_date, .format = "raw"
+      )
+    ) |>
+    api_resps_parse(.format)
+
+  return(resps)  
+}

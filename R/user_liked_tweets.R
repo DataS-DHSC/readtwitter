@@ -18,7 +18,8 @@
 user_liked_tweets <- function(token,
                               screen_name, 
                               ...,
-                              .n = Inf) {
+                              .n = Inf,
+                              .format = "parsed") {
   
   api_endpoint <- "/2/users/%s/liked_tweets"
   rate <- 75 / (15 * 60)
