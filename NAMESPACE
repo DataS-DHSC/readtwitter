@@ -3,6 +3,7 @@
 export(bind_resps)
 export(flatten_referenced_tweets)
 export(tweets_search_all)
+export(tweets_search_keywords)
 export(user_by_username)
 export(user_liked_tweets)
 export(user_tweets)

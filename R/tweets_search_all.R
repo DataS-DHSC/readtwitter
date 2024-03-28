@@ -115,7 +115,6 @@ tweets_search_all <- function(token,
 #' @return
 #' @export
 #'
-#' @examples
 tweets_search_keywords <- function(token,
                                    screen_name,
                                    keywords,
