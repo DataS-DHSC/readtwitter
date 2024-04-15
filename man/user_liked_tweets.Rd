@@ -7,18 +7,20 @@
 user_liked_tweets(token, screen_name, ..., .n = Inf, .format = "parsed")
 }
 \arguments{
-\item{token}{optional character string giving a bearer token used for
-authorisation.#'}
+\item{token}{character string giving a bearer token used for
+authorisation.}
 
 \item{screen_name}{character string giving the twitter screen name to
 download tweets from.}
 
-\item{...}{values to be passed on the the API}
+\item{...}{values to be passed on the the API#'}
 
-\item{.n}{maximum number of liked tweets to return}
+\item{.n}{optional maximum number of liked tweets to return}
+
+\item{.format}{optional one of "parsed" (default), "body", or "raw"}
 }
 \value{
-a list of JSONs returned from the API
+a formatted list of JSONs returned from the API
 }
 \description{
 Endpoint documentation:

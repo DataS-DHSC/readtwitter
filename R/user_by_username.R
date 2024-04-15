@@ -9,6 +9,7 @@
 #' @param screen_name character string giving the twitter screen name to 
 #'  download tweets from.
 #' @param ... values to be passed on the the API
+#' @param .format optional one of "parsed", "body" (default), or "raw"
 #'
 #' @return a list of JSONs returned from the API
 #' @export

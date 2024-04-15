@@ -23,20 +23,22 @@ download tweets from.}
 
 \item{...}{values to be passed on the the API}
 
-\item{n}{optional integer giving the maximum number of tweets to download
+\item{.n}{optional integer giving the maximum number of tweets to download
 (must be at least 5).}
 
-\item{start_date}{optional date if specified is the earliest dated tweets
+\item{.start_date}{optional date if specified is the earliest dated tweets
 to include.}
 
-\item{end_date}{optional date if specified is the latest dated tweets to
+\item{.end_date}{optional date if specified is the latest dated tweets to
 include.}
+
+\item{.format}{optional one of "parsed"  (default), "body", or "raw"}
 }
 \value{
 a list of JSONs returned from the API
 }
 \description{
-Return a data frame of tweets from a specified screen name. The function
+Return a tweets from a specified screen name. The function
 will return at most the last 3,200 tweets (this is a limit of the API) and
 these can be limited by either specifying the number of tweets to return, the
 time range that tweets fall in, or both. Note that the latest tweets are

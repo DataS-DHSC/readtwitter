@@ -53,12 +53,10 @@ api_req_paginate <- function(token,
       httr2::req_perform()
     
     result_count <- httr2::resp_body_json(resp)$meta$result_count
-    if (result_count > 0) {
-      resp_list[[i]] <- resp
-    }
-    
+    resp_list[[i]] <- resp
+
     next_cursor <- httr2::resp_body_json(resp)$meta$next_token
-    n_results <- n_results + result_count
+    n_results <- n_results + httr2::resp_body_json(resp)$meta$result_count
     
     if (is.null(next_cursor) || (n_results >= n)) {
       break
@@ -83,7 +81,7 @@ api_req_paginate <- function(token,
     )
   }
   
-  return(resp_list)
+  return(resp_list[1:i])
 }
 
 

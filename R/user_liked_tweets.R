@@ -1,18 +1,18 @@
 
 #' Get tweets a user has liked
 #' 
-#' 
 #' Endpoint documentation:
 #' https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-users-id-liked_tweets
 #'  
-#' @param token optional character string giving a bearer token used for 
-#'   authorisation.#'
+#' @param token character string giving a bearer token used for 
+#'   authorisation.
 #' @param screen_name character string giving the twitter screen name to 
 #'  download tweets from.
-#' @param .n maximum number of liked tweets to return
-#' @param ... values to be passed on the the API
+#' @param ... values to be passed on the the API#'  
+#' @param .n optional maximum number of liked tweets to return
+#' @param .format optional one of "parsed" (default), "body", or "raw"
 #'
-#' @return a list of JSONs returned from the API
+#' @return a formatted list of JSONs returned from the API
 #' @export
 #'
 user_liked_tweets <- function(token,

@@ -14,6 +14,8 @@ authorisation.}
 download tweets from.}
 
 \item{...}{values to be passed on the the API}
+
+\item{.format}{optional one of "parsed", "body" (default), or "raw"}
 }
 \value{
 a list of JSONs returned from the API

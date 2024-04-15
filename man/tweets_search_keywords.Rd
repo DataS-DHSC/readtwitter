@@ -2,16 +2,16 @@
 % Please edit documentation in R/tweets_search_all.R
 \name{tweets_search_keywords}
 \alias{tweets_search_keywords}
-\title{Title}
+\title{Keyword search of tweets for specified screen name}
 \usage{
 tweets_search_keywords(
   token,
   screen_name,
   keywords,
   ...,
-  include_retweets = TRUE,
-  include_replies = TRUE,
-  include_quotes = TRUE,
+  .include_retweets = TRUE,
+  .include_replies = TRUE,
+  .include_quotes = TRUE,
   .n = Inf,
   .start_date = NULL,
   .end_date = NULL,
@@ -19,7 +19,7 @@ tweets_search_keywords(
 )
 }
 \arguments{
-\item{token}{}
+\item{token}{character string giving a bearer token used for authorisation.}
 
 \item{screen_name}{}
 
@@ -27,20 +27,26 @@ tweets_search_keywords(
 
 \item{...}{}
 
-\item{include_retweets}{}
+\item{.include_retweets}{should retweets be included}
 
-\item{include_replies}{}
+\item{.include_replies}{should replies be included}
 
-\item{include_quotes}{}
+\item{.include_quotes}{should quote tweets be included}
 
-\item{.n}{}
+\item{.n}{optional integer giving the maximum number of tweets to download
+(must be at least 5).}
 
-\item{.start_date}{}
+\item{.start_date}{optional date if specified is the earliest dated tweets
+to include.}
 
-\item{.end_date}{}
+\item{.end_date}{optional date if specified is the latest dated tweets to
+include.}
 
-\item{.format}{}
+\item{.format}{optional one of "parsed"  (default), "body", or "raw"}
+}
+\value{
+a formatted list of JSONs returned from the API
 }
 \description{
-Title
+Keyword search of tweets for specified screen name
 }

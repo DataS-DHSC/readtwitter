@@ -2,16 +2,17 @@
 % Please edit documentation in R/utils.R
 \name{flatten_referenced_tweets}
 \alias{flatten_referenced_tweets}
-\title{Title}
+\title{Collapse down a returned list of tweets}
 \usage{
 flatten_referenced_tweets(tweets_resp)
 }
 \arguments{
-\item{tweets_resp}{}
+\item{tweets_resp}{response to be flattened}
 }
 \value{
-formatted response
+dataframe of tweets
 }
 \description{
-Title
+Flatten a list of tweets by joining on the text of any
+referenced tweets and any errors.
 }

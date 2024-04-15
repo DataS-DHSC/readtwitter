@@ -1,29 +1,24 @@
 # TODO
 # update functions so more in line with current implementation
-
-# check keywords for special characters and then quote them
-# add in " OR " (including at the end)
-# Use a regex to find the first " OR " after a prescribed number of
-# characters(500 - length(user_query))
-
-# split into separate queries removing trailing " OR "
-
-# run seprate queries and then dedupe results based on id
-# how we will handle the referenced tweets? Can just dedupe 
-# these as well
-
 # sort out documentation, add in list values for format
 
 
-#' Title
+#' Collapse down a returned list of tweets
+#' 
+#' Flatten a list of tweets by joining on the text of any
+#' referenced tweets and any errors.
 #'
-#' @param tweets_resp 
+#' @param tweets_resp response to be flattened
 #'
-#' @return formatted response
+#' @return dataframe of tweets
 #' @export
 #'
 flatten_referenced_tweets <- function(tweets_resp) {
   check_errors(tweets_resp$errors)
+  
+  if (is.null(tweets_resp$data)) {
+    stop("Unable to flatten tweet as no data present")
+  }
   
   df <- tweets_resp$data |>
     join_referenced_tweets(tweets_resp$includes_tweets, tweets_resp$errors)
@@ -42,12 +37,12 @@ flatten_referenced_tweets <- function(tweets_resp) {
 
 
 #' @keywords internal
-construct_search_queries <- function(screen_name,
-                                     keywords,
-                                     include_retweets,
-                                     include_replies,
-                                     include_quotes) {
-
+build_search_queries <- function(screen_name,
+                                 keywords,
+                                 include_retweets,
+                                 include_replies,
+                                 include_quotes) {
+  
   base_query <- sprintf("from:%s", screen_name)
   
   if (!include_retweets) base_query <- sprintf("%s -is:retweet", base_query)
@@ -195,7 +190,7 @@ join_referenced_tweets <- function(df, df_ref, df_errors) {
         names_prefix = "text_"
       ) |>
       select(
-        -text_NA
+        -any_of("text_NA")
       )
   } else {
     df <- df |>

@@ -1,7 +1,7 @@
 
 #' Get tweets for specified screen name
 #' 
-#' Return a data frame of tweets from a specified screen name. The function
+#' Return a tweets from a specified screen name. The function
 #' will return at most the last 3,200 tweets (this is a limit of the API) and 
 #' these can be limited by either specifying the number of tweets to return, the 
 #' time range that tweets fall in, or both. Note that the latest tweets are
@@ -18,13 +18,14 @@
 #'   authorisation. 
 #' @param screen_name character string giving the twitter screen name to 
 #'  download tweets from.
-#' @param n optional integer giving the maximum number of tweets to download 
-#'  (must be at least 5).
-#' @param start_date optional date if specified is the earliest dated tweets
-#'  to include.
-#' @param end_date optional date if specified is the latest dated tweets to
-#'  include.
 #' @param ... values to be passed on the the API
+#' @param .n optional integer giving the maximum number of tweets to download 
+#'  (must be at least 5).
+#' @param .start_date optional date if specified is the earliest dated tweets
+#'  to include.
+#' @param .end_date optional date if specified is the latest dated tweets to
+#'  include.
+#' @param .format optional one of "parsed"  (default), "body", or "raw"
 #'
 #' @return a list of JSONs returned from the API
 #' @export

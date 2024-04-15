@@ -1,31 +1,28 @@
 
-#' Get tweets for specified screen name
+#' Search of tweets for specified screen name
 #' 
-#' Return a data frame of tweets from a specified screen name. The function
-#' will return at most the last 3,200 tweets (this is a limit of the API) and 
-#' these can be limited by either specifying the number of tweets to return, the 
-#' time range that tweets fall in, or both. Note that the latest tweets are
-#' returned first. Twitter rate limit the API call to 15 requests every 15
-#' minutes and a maximum of 10,000 tweets per month. 
-#' 
-#' Referenced tweets (retweets, retweets with comments, and replies) are
-#' contained in the `includes` data object of each returned JSON. 
+#' Return tweets from a specified screen name that match the passed query 
+#' string. Note that the maximum length of the query string is unclear but has
+#' been set to 500 here.
 #' 
 #' Endpoint documentation:
-#' https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets
+#' https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-all
+#' 
+#' Query documentation:
+#' https://developer.twitter.com/en/docs/twitter-api/tweets/search/integrate/build-a-query
 #'
-#' @param token character string giving a bearer token used for 
-#'   authorisation. 
-#' @param screen_name character string giving the twitter screen name to 
-#'  download tweets from.
-#' @param n optional integer giving the maximum number of tweets to download.
-#' @param start_date optional date if specified is the earliest dated tweets
-#'  to include.
-#' @param end_date optional date if specified is the latest dated tweets to
-#'  include.
+#' @param token character string giving a bearer token used for authorisation. 
+#' @param query character string (max length 500) giving query string.
 #' @param ... values to be passed on the the API
+#' @param .n optional integer giving the maximum number of tweets to download 
+#'  (must be at least 5).
+#' @param .start_date optional date if specified is the earliest dated tweets
+#'  to include.
+#' @param .end_date optional date if specified is the latest dated tweets to
+#'  include.
+#' @param .format optional one of "parsed", "body", or "raw"
 #'
-#' @return a list of JSONs returned from the API
+#' @return a formatted list of JSONs returned from the API
 #' @export
 #'
 tweets_search_all <- function(token,
@@ -43,7 +40,7 @@ tweets_search_all <- function(token,
   min_tweet_date <- as.Date("2006-03-26")
   
   checkmate::assert_string(token) 
-  checkmate::assert_string(query, max.chars = 1024)
+  checkmate::assert_string(query, max.chars = 500)
   checkmate::assert_number(.n, lower = min_page_size)
   checkmate::assert_date(
     .start_date, lower = min_tweet_date, len = 1, null.ok = TRUE
@@ -98,30 +95,33 @@ tweets_search_all <- function(token,
 }
 
 
-#' Title
+#' Keyword search of tweets for specified screen name
 #'
-#' @param token 
+#' @param token character string giving a bearer token used for authorisation.
 #' @param screen_name 
 #' @param keywords 
 #' @param ... 
-#' @param .n 
-#' @param .start_date 
-#' @param .end_date 
-#' @param .format 
-#' @param include_retweets 
-#' @param include_replies 
-#' @param include_quotes 
+#' @param .n optional integer giving the maximum number of tweets to download 
+#'  (must be at least 5).
+#' @param .start_date optional date if specified is the earliest dated tweets
+#'  to include.
+#' @param .end_date optional date if specified is the latest dated tweets to
+#'  include.
+#' @param .format optional one of "parsed"  (default), "body", or "raw"
+#' @param .include_retweets should retweets be included
+#' @param .include_replies should replies be included
+#' @param .include_quotes should quote tweets be included
 #'
-#' @return
+#' @return a formatted list of JSONs returned from the API
 #' @export
 #'
 tweets_search_keywords <- function(token,
                                    screen_name,
                                    keywords,
                                    ...,
-                                   include_retweets = TRUE,
-                                   include_replies = TRUE,
-                                   include_quotes = TRUE,
+                                   .include_retweets = TRUE,
+                                   .include_replies = TRUE,
+                                   .include_quotes = TRUE,
                                    .n = Inf, 
                                    .start_date = NULL, 
                                    .end_date = NULL,
@@ -133,7 +133,7 @@ tweets_search_keywords <- function(token,
   if (identical(.format, "parsed")) .format <- parse_resps_tweets
   
   resps <- 
-    construct_search_queries(
+    build_search_queries(
       screen_name,  keywords, include_retweets, include_replies, include_quotes
     ) |>
     sapply(
