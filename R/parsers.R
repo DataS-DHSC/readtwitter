@@ -8,15 +8,15 @@
 #'
 bind_resps <- function(resps) {
   resps |>
-    purrr:::reduce(merge_resps)
+    purrr::reduce(merge_resps)
 }
 
 
 #' @keywords internal
 merge_resps <- function(x, y) {
   for (i in names(y)) {
-    x_i <- purrr:::pluck(x, i)
-    y_i <- purrr:::pluck(y, i)
+    x_i <- purrr::pluck(x, i)
+    y_i <- purrr::pluck(y, i)
     
     if (is.null(x_i)) {
       x[[i]] <- y_i

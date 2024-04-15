@@ -13,7 +13,7 @@
 #'
 #' @param token character string giving a bearer token used for authorisation. 
 #' @param query character string (max length 500) giving query string.
-#' @param ... values to be passed on the the API
+#' @param ... values to be passed on the the API.
 #' @param .n optional integer giving the maximum number of tweets to download 
 #'  (must be at least 5).
 #' @param .start_date optional date if specified is the earliest dated tweets
@@ -98,9 +98,10 @@ tweets_search_all <- function(token,
 #' Keyword search of tweets for specified screen name
 #'
 #' @param token character string giving a bearer token used for authorisation.
-#' @param screen_name 
-#' @param keywords 
-#' @param ... 
+#' @param screen_name  character string giving the twitter screen name to 
+#'  download tweets from.
+#' @param keywords character list of keywords to search for.
+#' @param ... values to be passed on the the API.
 #' @param .n optional integer giving the maximum number of tweets to download 
 #'  (must be at least 5).
 #' @param .start_date optional date if specified is the earliest dated tweets
@@ -134,7 +135,8 @@ tweets_search_keywords <- function(token,
   
   resps <- 
     build_search_queries(
-      screen_name,  keywords, include_retweets, include_replies, include_quotes
+      screen_name,  keywords, 
+      .include_retweets, .include_replies, .include_quotes
     ) |>
     sapply(
       \(x) tweets_search_all(

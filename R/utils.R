@@ -103,16 +103,16 @@ build_search_queries <- function(screen_name,
 
 #' @keywords internal
 #' @importFrom dplyr mutate select group_by rename left_join join_by across 
-#'   ungroup
+#'   ungroup .data
 #' @importFrom tidyr unnest_longer unnest_wider pivot_wider
 expand_referenced_tweets <- function(df) {
   if ("referenced_tweets" %in% names(df)) {
     df <- df |>
       mutate(
-        referenced_tweets_raw = referenced_tweets
+        referenced_tweets_raw = .data$referenced_tweets
       ) |>
-      unnest_longer(referenced_tweets, keep_empty = TRUE) %>% 
-      unnest_wider(referenced_tweets, names_sep = "_")
+      unnest_longer(.data$referenced_tweets, keep_empty = TRUE) |> 
+      unnest_wider(.data$referenced_tweets, names_sep = "_")
   } else {
     df <- df |>
       dplyr::mutate(
@@ -126,17 +126,18 @@ expand_referenced_tweets <- function(df) {
 
 
 #' @keywords internal
-#' @importFrom dplyr left_join filter select rename distinct join_by mutate
+#' @importFrom dplyr left_join filter select rename distinct 
+#'   join_by mutate .data
 join_referenced_errors <- function(df, df_errors) {
   if (!is.null(df_errors)) {
     df <- df |>
       left_join(
         df_errors |>
-          filter(parameter == "referenced_tweets.id") |>
-          select(value, detail) |>
-          rename(referenced_tweets_id = value, errors = detail) |>
+          filter(.data$parameter == "referenced_tweets.id") |>
+          select(.data$value, .data$detail) |>
+          rename(referenced_tweets_id = .data$value, errors = .data$detail) |>
           distinct(),
-        by = join_by(referenced_tweets_id)
+        by = join_by(.data$referenced_tweets_id)
       )
   } else {
     df <- df |>
@@ -154,39 +155,45 @@ join_referenced_errors <- function(df, df_errors) {
 #' @importFrom dplyr mutate select group_by rename left_join join_by across 
 #'   ungroup
 #' @importFrom tidyr unnest_longer unnest_wider pivot_wider
+#' @importFrom dplyr any_of .data
 join_referenced_tweets <- function(df, df_ref, df_errors) {
   # check to see if any retweets, quote tweets or replies
   if (!is.null(df_ref)) {
     df <- df |>
       mutate(
-        referenced_tweets_raw = referenced_tweets
+        referenced_tweets_raw = .data$referenced_tweets
       ) |>
-      unnest_longer(referenced_tweets, keep_empty = TRUE) |>
-      unnest_wider(referenced_tweets, names_sep = "_") |>
+      unnest_longer(.data$referenced_tweets, keep_empty = TRUE) |>
+      unnest_wider(.data$referenced_tweets, names_sep = "_") |>
       left_join(
         df_ref |>
-          select(id, text) |>
-          rename(referenced_tweets_id = id, referenced_tweets_text = text),
-        by = join_by(referenced_tweets_id)
+          select(.data$id, .data$text) |>
+          rename(
+            referenced_tweets_id = .data$id, referenced_tweets_text = .data$text
+          ),
+        by = join_by(.data$referenced_tweets_id)
       ) |>
       join_referenced_errors(df_errors) |>
       select(
-        -referenced_tweets_id
+        -.data$referenced_tweets_id
       ) |>
       group_by(
-        across(-c(referenced_tweets_type, referenced_tweets_text, errors))
+        across(
+          -c(.data$referenced_tweets_type, .data$referenced_tweets_text, 
+             .data$errors)
+        )
       ) |>
       mutate(
         errors = paste(
-          errors[!is.na(errors)], 
+          .data$errors[!is.na(.data$errors)], 
           collapse = " | "
         ),
-        errors = ifelse(errors == "", NA_character_, errors)
+        errors = ifelse(.data$errors == "", NA_character_, .data$errors)
       ) |>
       ungroup() |>
       pivot_wider(
-        names_from = referenced_tweets_type, 
-        values_from = referenced_tweets_text,
+        names_from = .data$referenced_tweets_type, 
+        values_from = .data$referenced_tweets_text,
         names_prefix = "text_"
       ) |>
       select(

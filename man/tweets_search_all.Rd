@@ -19,7 +19,7 @@ tweets_search_all(
 
 \item{query}{character string (max length 500) giving query string.}
 
-\item{...}{values to be passed on the the API}
+\item{...}{values to be passed on the the API.}
 
 \item{.n}{optional integer giving the maximum number of tweets to download
 (must be at least 5).}

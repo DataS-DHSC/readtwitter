@@ -21,11 +21,12 @@ tweets_search_keywords(
 \arguments{
 \item{token}{character string giving a bearer token used for authorisation.}
 
-\item{screen_name}{}
+\item{screen_name}{character string giving the twitter screen name to
+download tweets from.}
 
-\item{keywords}{}
+\item{keywords}{character list of keywords to search for.}
 
-\item{...}{}
+\item{...}{values to be passed on the the API.}
 
 \item{.include_retweets}{should retweets be included}
 
