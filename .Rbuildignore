@@ -4,3 +4,4 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^test\.R$
+^R/get_tweets.R$

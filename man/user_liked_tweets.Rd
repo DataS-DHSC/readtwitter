@@ -4,22 +4,25 @@
 \alias{user_liked_tweets}
 \title{Get tweets a user has liked}
 \usage{
-user_liked_tweets(token, screen_name, n = 100, ...)
+user_liked_tweets(token, screen_name, ..., .n = Inf, .format = "parsed")
 }
 \arguments{
-\item{token}{optional character string giving a bearer token used for
-authorisation.#'}
+\item{token}{character string giving a bearer token used for
+authorisation.}
 
 \item{screen_name}{character string giving the twitter screen name to
 download tweets from.}
 
-\item{n}{maximum number of liked tweets to return}
+\item{...}{values to be passed on the the API#'}
 
-\item{...}{values to be passed on the the API}
+\item{.n}{optional maximum number of liked tweets to return}
+
+\item{.format}{optional one of "parsed" (default), "body", or "raw"}
 }
 \value{
-a list of JSONs returned from the API
+a formatted list of JSONs returned from the API
 }
 \description{
-Get tweets a user has liked
+Endpoint documentation:
+https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-users-id-liked_tweets
 }

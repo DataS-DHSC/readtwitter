@@ -7,10 +7,11 @@
 user_tweets(
   token,
   screen_name,
-  n = Inf,
-  start_date = NULL,
-  end_date = NULL,
-  ...
+  ...,
+  .n = NULL,
+  .start_date = NULL,
+  .end_date = NULL,
+  .format = "parsed"
 )
 }
 \arguments{
@@ -20,28 +21,34 @@ authorisation.}
 \item{screen_name}{character string giving the twitter screen name to
 download tweets from.}
 
-\item{n}{optional integer giving the maximum number of tweets to download.}
+\item{...}{values to be passed on the the API}
 
-\item{start_date}{optional date if specified is the earliest dated tweets
+\item{.n}{optional integer giving the maximum number of tweets to download
+(must be at least 5).}
+
+\item{.start_date}{optional date if specified is the earliest dated tweets
 to include.}
 
-\item{end_date}{optional date if specified is the latest dated tweets to
+\item{.end_date}{optional date if specified is the latest dated tweets to
 include.}
 
-\item{...}{values to be passed on the the API}
+\item{.format}{optional one of "parsed"  (default), "body", or "raw"}
 }
 \value{
 a list of JSONs returned from the API
 }
 \description{
-Return a data frame of tweets from a specified screen name. The function
+Return a tweets from a specified screen name. The function
 will return at most the last 3,200 tweets (this is a limit of the API) and
 these can be limited by either specifying the number of tweets to return, the
 time range that tweets fall in, or both. Note that the latest tweets are
-returned first. Twitter rate limit the API call to 15 requests every 15
-minutes and a maximum of 10,000 tweets per month.
+returned first. Twitter rate limit the API call to 1,500 requests every 15
+minutes and a maximum of 1000,000 tweets per month.
 }
 \details{
 Referenced tweets (retweets, retweets with comments, and replies) are
 contained in the \code{includes} data object of each returned JSON.
+
+Endpoint documentation:
+https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets
 }
