@@ -52,7 +52,6 @@ api_req_paginate <- function(token,
     resp <- req |>
       httr2::req_perform()
     
-    result_count <- httr2::resp_body_json(resp)$meta$result_count
     resp_list[[i]] <- resp
 
     next_cursor <- httr2::resp_body_json(resp)$meta$next_token

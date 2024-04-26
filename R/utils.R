@@ -1,7 +1,3 @@
-# TODO
-# update functions so more in line with current implementation
-# sort out documentation, add in list values for format
-
 
 #' Collapse down a returned list of tweets
 #' 
@@ -10,7 +6,7 @@
 #'
 #' @param tweets_resp response to be flattened
 #'
-#' @return dataframe of tweets
+#' @return data frame of tweets
 #' @export
 #'
 flatten_referenced_tweets <- function(tweets_resp) {
@@ -137,7 +133,7 @@ join_referenced_errors <- function(df, df_errors) {
           select(.data$value, .data$detail) |>
           rename(referenced_tweets_id = .data$value, errors = .data$detail) |>
           distinct(),
-        by = join_by(.data$referenced_tweets_id)
+        by = join_by(referenced_tweets_id)
       )
   } else {
     df <- df |>
@@ -155,7 +151,7 @@ join_referenced_errors <- function(df, df_errors) {
 #' @importFrom dplyr mutate select group_by rename left_join join_by across 
 #'   ungroup
 #' @importFrom tidyr unnest_longer unnest_wider pivot_wider
-#' @importFrom dplyr any_of .data
+#' @importFrom dplyr any_of .data distinct
 join_referenced_tweets <- function(df, df_ref, df_errors) {
   # check to see if any retweets, quote tweets or replies
   if (!is.null(df_ref)) {
@@ -171,7 +167,7 @@ join_referenced_tweets <- function(df, df_ref, df_errors) {
           rename(
             referenced_tweets_id = .data$id, referenced_tweets_text = .data$text
           ),
-        by = join_by(.data$referenced_tweets_id)
+        by = join_by(referenced_tweets_id)
       ) |>
       join_referenced_errors(df_errors) |>
       select(
@@ -191,6 +187,7 @@ join_referenced_tweets <- function(df, df_ref, df_errors) {
         errors = ifelse(.data$errors == "", NA_character_, .data$errors)
       ) |>
       ungroup() |>
+      distinct(id, .keep_all = TRUE) |>
       pivot_wider(
         names_from = .data$referenced_tweets_type, 
         values_from = .data$referenced_tweets_text,
@@ -203,7 +200,8 @@ join_referenced_tweets <- function(df, df_ref, df_errors) {
     df <- df |>
       mutate(
         referenced_tweets_raw = list(NA)
-      )
+      ) |>
+      distinct(id, .keep_all = TRUE)
   }  
 }
 
@@ -224,4 +222,43 @@ check_errors <- function(df_errors) {
       )
     }
   }
+}
+
+
+#' Lookup usernames for user ids
+#' 
+#' @param df data frame of tweets
+#' @param token character string giving a bearer token used for 
+#'   authorisation.
+#'   
+#' @return data frame of tweets
+#' @export
+#' 
+#' @importFrom dplyr left_join filter pull rename 
+#'   join_by mutate .data
+#'   
+join_replied_to_usernames <- function(df, token) {
+  if (!is.null(df$in_reply_to_user_id)) {
+    user_ids <- df |>
+      filter(.data$in_reply_to_user_id != "NA") |>
+      pull("in_reply_to_user_id") |>
+      unique()
+    
+    if (length(user_ids) > 0) {
+      df_users <- users(token, user_ids, .format = "parsed") |>
+        mutate(
+          in_reply_to_username = paste0("@", .data$username)
+        ) |>
+        select(id, in_reply_to_username) |>
+        rename(in_reply_to_user_id = .data$id)
+      
+      df <- df |>
+        left_join(
+          df_users,
+          by = join_by(in_reply_to_user_id)
+        )
+    }
+  }
+  
+  return(df)
 }

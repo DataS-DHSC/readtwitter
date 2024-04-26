@@ -4,10 +4,10 @@
 #' Endpoint documentation: 
 #' https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-by-username-username
 #' 
-#' @param token optional character string giving a bearer token used for 
+#' @param token character string giving a bearer token used for 
 #'   authorisation.
 #' @param screen_name character string giving the twitter screen name to 
-#'  download tweets from.
+#'  download details of.
 #' @param ... values to be passed on the the API
 #' @param .format optional one of "parsed", "body" (default), or "raw"
 #'

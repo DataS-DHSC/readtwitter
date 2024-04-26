@@ -44,11 +44,19 @@ parse_resp_meta <- function(resp, .name = "data") {
 
 #' @keywords internal
 parse_resps_tweets <- function(resps) {
-  resp_merged <- resps |>
-    lapply(\(x) httr2::resp_body_json(x, simplifyVector = TRUE)) |>
+
+  resp_bodies <- resps |>
+    lapply(\(x) httr2::resp_body_json(x, simplifyVector = TRUE))
+
+  resp_merged <- resp_bodies |>
+    Filter(\(x) x$meta$result_count > 0, x = _) |>
     bind_resps()
   
-  resp_merged[["meta"]] <- as.data.frame(resp_merged[["meta"]])
+  resp_merged[["meta"]] <- 
+    purrr::map(
+      resp_bodies, \(x) as.data.frame(x$meta)
+    ) |> 
+    dplyr::bind_rows()
   
   resp_merged <- resp_merged |>
     purrr::list_flatten()

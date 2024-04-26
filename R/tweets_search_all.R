@@ -89,8 +89,7 @@ tweets_search_all <- function(token,
   resps <- api_req_paginate(token, api, params, rate, .n,
                             min_page_size, max_page_size) |>
     api_resps_parse(.format)
-  
-  
+
   return(resps)
 }
 
@@ -129,7 +128,7 @@ tweets_search_keywords <- function(token,
                                    .format = "parsed") {
   
   checkmate::assert_string(screen_name)
-  checkmate::assert_list(keywords)
+  checkmate::assert_character(keywords)
   
   if (identical(.format, "parsed")) .format <- parse_resps_tweets
   
@@ -138,12 +137,13 @@ tweets_search_keywords <- function(token,
       screen_name,  keywords, 
       .include_retweets, .include_replies, .include_quotes
     ) |>
-    sapply(
+    lapply(
       \(x) tweets_search_all(
         token, x, ..., .n = .n, .start_date = .start_date, 
         .end_date = .end_date, .format = "raw"
       )
     ) |>
+    unlist(recursive = FALSE) |>
     api_resps_parse(.format)
 
   return(resps)  
