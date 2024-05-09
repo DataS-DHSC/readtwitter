@@ -10,7 +10,7 @@ flatten_referenced_tweets(tweets_resp)
 \item{tweets_resp}{response to be flattened}
 }
 \value{
-dataframe of tweets
+data frame of tweets
 }
 \description{
 Flatten a list of tweets by joining on the text of any

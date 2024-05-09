@@ -7,11 +7,11 @@
 user_by_username(token, screen_name, ..., .format = "body")
 }
 \arguments{
-\item{token}{optional character string giving a bearer token used for
+\item{token}{character string giving a bearer token used for
 authorisation.}
 
 \item{screen_name}{character string giving the twitter screen name to
-download tweets from.}
+download details of.}
 
 \item{...}{values to be passed on the the API}
 
