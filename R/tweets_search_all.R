@@ -132,16 +132,28 @@ tweets_search_keywords <- function(token,
   
   if (identical(.format, "parsed")) .format <- parse_resps_tweets
   
-  resps <- 
+  queries <- 
     build_search_queries(
       screen_name,  keywords, 
       .include_retweets, .include_replies, .include_quotes
-    ) |>
+    )
+  
+  pb <- progress::progress_bar$new(
+    format = "  running queries [:bar] :percent in :elapsed",
+    total = length(queries)
+  )
+  
+  pb$tick(0)
+  resps <- queries |>
     lapply(
-      \(x) tweets_search_all(
-        token, x, ..., .n = .n, .start_date = .start_date, 
-        .end_date = .end_date, .format = "raw"
-      )
+      \(x) {
+        tweets <- tweets_search_all(
+          token, x, ..., .n = .n, .start_date = .start_date, 
+          .end_date = .end_date, .format = "raw"
+        )
+        pb$tick()
+        return(tweets)
+      }
     ) |>
     unlist(recursive = FALSE) |>
     api_resps_parse(.format)

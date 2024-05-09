@@ -9,8 +9,13 @@ api_req_construct <- function(token,
     httr2::req_user_agent(getOption("HTTPUserAgent")) |>
     httr2::req_headers(
       Authorization = paste('Bearer', token),
-      .redact = "Authorization") |>
-    httr2::req_url_query(!!!params) 
+      .redact = "Authorization"
+    ) |>
+    httr2::req_url_query(!!!params) |>
+    httr2::req_retry(
+      max_tries = 5, 
+      is_transient = \(resp) httr2::resp_status(resp) %in% c(500, 502, 503, 504)
+    )
   
   if (!is.null(rate)) {
     req <- req |> httr2::req_throttle(rate)
@@ -57,6 +62,14 @@ api_req_paginate <- function(token,
     next_cursor <- httr2::resp_body_json(resp)$meta$next_token
     n_results <- n_results + httr2::resp_body_json(resp)$meta$result_count
     
+    if (readtwitter_verbosity() > 0) {
+      message(
+        "Last request returned ",
+        httr2::resp_body_json(resp)$meta$result_count,
+        " tweets"
+      )
+    }
+
     if (is.null(next_cursor) || (n_results >= n)) {
       break
     }
@@ -78,6 +91,10 @@ api_req_paginate <- function(token,
     warning(
       sprintf("%d tweets requested but only %d returned.", n, n_results)
     )
+  }
+  
+  if (readtwitter_verbosity() > 0) {
+    message("Read a total of ", n_results, " tweets")
   }
   
   return(resp_list[1:i])

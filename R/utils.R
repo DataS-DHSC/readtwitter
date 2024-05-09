@@ -47,7 +47,12 @@ build_search_queries <- function(screen_name,
   
   # 5 characters for the two sets of parenthesise and the space
   #(<base query>) (<key words>)
-  .max_query_len = 500 - 5
+  #
+  # NOTE that twitter doc says that max query length is either 512 or 1024. It 
+  # is  unclear if this is for the URL safe character string or not. Also, using
+  # a value of 500 below results in the twitter API returning 503 errors...
+  #
+  .max_query_len = 200 - 5
   
   max_query_len = .max_query_len - nchar(base_query)
 
@@ -261,4 +266,13 @@ join_replied_to_usernames <- function(df, token) {
   }
   
   return(df)
+}
+
+readtwitter_verbosity <- function() {
+  x <- getOption("readtwitter_verbosity")
+  if (!is.null(x)) {
+    return(x)
+  }
+  
+  return(0)
 }
