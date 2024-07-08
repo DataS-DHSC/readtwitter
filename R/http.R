@@ -14,7 +14,8 @@ api_req_construct <- function(token,
     httr2::req_url_query(!!!params) |>
     httr2::req_retry(
       max_tries = 5, 
-      is_transient = \(resp) httr2::resp_status(resp) %in% c(500, 502, 503, 504)
+      is_transient = api_is_transient,
+      after = api_after
     )
   
   if (!is.null(rate)) {
@@ -24,6 +25,17 @@ api_req_construct <- function(token,
   return(req)
 }
 
+#' @keywords internal
+api_is_transient <- function(resp) {
+  httr2::resp_status(resp) %in% c(429, 500, 502, 503, 504)
+}
+
+#' @keywords internal
+api_after <- function(resp) {
+  if (httr2::resp_status(resp) != 429) return(NULL)
+  time <- as.numeric(httr2::resp_header(resp, "x-rate-limit-reset"))
+  time - unclass(Sys.time())
+}
 
 #' @keywords internal
 api_req_paginate <- function(token, 
