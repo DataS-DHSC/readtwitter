@@ -138,7 +138,7 @@ join_referenced_errors <- function(df, df_errors) {
           select(.data$value, .data$detail) |>
           rename(referenced_tweets_id = .data$value, errors = .data$detail) |>
           distinct(),
-        by = join_by(.data$referenced_tweets_id)
+        by = join_by("referenced_tweets_id")
       )
   } else {
     df <- df |>
@@ -172,7 +172,7 @@ join_referenced_tweets <- function(df, df_ref, df_errors) {
           rename(
             referenced_tweets_id = .data$id, referenced_tweets_text = .data$text
           ),
-        by = join_by(.data$referenced_tweets_id)
+        by = join_by("referenced_tweets_id")
       ) |>
       join_referenced_errors(df_errors) |>
       select(
@@ -260,7 +260,7 @@ join_replied_to_usernames <- function(df, token) {
       df <- df |>
         left_join(
           df_users,
-          by = join_by(.data$in_reply_to_user_id)
+          by = join_by("in_reply_to_user_id")
         )
     }
   }
