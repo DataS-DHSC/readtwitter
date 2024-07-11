@@ -138,7 +138,7 @@ join_referenced_errors <- function(df, df_errors) {
           select(.data$value, .data$detail) |>
           rename(referenced_tweets_id = .data$value, errors = .data$detail) |>
           distinct(),
-        by = join_by(referenced_tweets_id)
+        by = join_by(.data$referenced_tweets_id)
       )
   } else {
     df <- df |>
@@ -172,7 +172,7 @@ join_referenced_tweets <- function(df, df_ref, df_errors) {
           rename(
             referenced_tweets_id = .data$id, referenced_tweets_text = .data$text
           ),
-        by = join_by(referenced_tweets_id)
+        by = join_by(.data$referenced_tweets_id)
       ) |>
       join_referenced_errors(df_errors) |>
       select(
@@ -192,7 +192,7 @@ join_referenced_tweets <- function(df, df_ref, df_errors) {
         errors = ifelse(.data$errors == "", NA_character_, .data$errors)
       ) |>
       ungroup() |>
-      distinct(id, .keep_all = TRUE) |>
+      distinct(.data$id, .keep_all = TRUE) |>
       pivot_wider(
         names_from = .data$referenced_tweets_type, 
         values_from = .data$referenced_tweets_text,
@@ -206,7 +206,7 @@ join_referenced_tweets <- function(df, df_ref, df_errors) {
       mutate(
         referenced_tweets_raw = list(NA)
       ) |>
-      distinct(id, .keep_all = TRUE)
+      distinct(.data$id, .keep_all = TRUE)
   }  
 }
 
@@ -254,13 +254,13 @@ join_replied_to_usernames <- function(df, token) {
         mutate(
           in_reply_to_username = paste0("@", .data$username)
         ) |>
-        select(id, in_reply_to_username) |>
+        select(.data$id, .data$in_reply_to_username) |>
         rename(in_reply_to_user_id = .data$id)
       
       df <- df |>
         left_join(
           df_users,
-          by = join_by(in_reply_to_user_id)
+          by = join_by(.data$in_reply_to_user_id)
         )
     }
   }
