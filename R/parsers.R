@@ -49,8 +49,11 @@ parse_resps_tweets <- function(resps) {
     lapply(\(x) httr2::resp_body_json(x, simplifyVector = TRUE))
 
   resp_merged <- resp_bodies |>
-    Filter(\(x) x$meta$result_count > 0, x = _) |>
-    bind_resps()
+    Filter(\(x) x$meta$result_count > 0, x = _) 
+  
+  if (length(resp_merged) > 0) {
+    resp_merged <- bind_resps(resp_merged)
+  }
   
   resp_merged[["meta"]] <- 
     purrr::map(
