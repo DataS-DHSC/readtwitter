@@ -246,17 +246,34 @@ join_replied_to_usernames <- function(df, token) {
   if (!is.null(df$in_reply_to_user_id)) {
     user_ids <- df |>
       filter(.data$in_reply_to_user_id != "NA") |>
-      pull("in_reply_to_user_id") |>
-      unique()
+      distinct(in_reply_to_user_id)
     
-    if (length(user_ids) > 0) {
-      df_users <- users(token, user_ids, .format = "parsed") |>
-        mutate(
-          in_reply_to_username = paste0("@", .data$username)
-        ) |>
-        select(.data$id, .data$in_reply_to_username) |>
-        rename(in_reply_to_user_id = .data$id)
+    if (nrow(user_ids) > 0) {
+      df_users <- users(
+        token, 
+        user_ids |> pull(in_reply_to_user_id), 
+        .format = "parsed"
+      ) 
       
+      if (nrow(df_users) > 0) {
+        df_users <- user_ids |>
+          left_join(
+            df_users |>
+              mutate(
+                in_reply_to_username = paste0("@", .data$username)
+              ) |>
+              select(.data$id, .data$in_reply_to_username) |>
+              rename(in_reply_to_user_id = .data$id),
+            by = join_by("in_reply_to_user_id")
+          )
+      } else {
+        df_users <- user_ids |>
+          mutate(
+            in_reply_to_user_id = NA_character_,
+            in_reply_to_username = NA_character_
+          )
+      }
+
       df <- df |>
         left_join(
           df_users,
