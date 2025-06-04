@@ -151,6 +151,7 @@ tweets_search_keywords <- function(token,
           token, x, ..., .n = .n, .start_date = .start_date, 
           .end_date = .end_date, .format = "raw"
         )
+        Sys.sleep(1)
         pb$tick()
         return(tweets)
       }
