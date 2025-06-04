@@ -34,7 +34,7 @@ tweets_search_all <- function(token,
                               .format = "parsed") {
   
   api_endpoint <- "/2/tweets/search/all"
-  rate <- 300 / (15 * 60)
+  rate <- c(1, 2)
   min_page_size <- 10
   max_page_size <- 500
   min_tweet_date <- as.Date("2006-03-26")

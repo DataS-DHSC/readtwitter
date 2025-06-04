@@ -19,7 +19,9 @@ api_req_construct <- function(token,
     )
   
   if (!is.null(rate)) {
-    req <- req |> httr2::req_throttle(rate)
+    req <- req |> httr2::req_throttle(
+      capacity = rate[[1]], fill_time_s = rate[[2]]
+    )
   }
     
   return(req)

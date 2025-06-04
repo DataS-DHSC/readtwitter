@@ -22,7 +22,7 @@ user_liked_tweets <- function(token,
                               .format = "parsed") {
   
   api_endpoint <- "/2/users/%s/liked_tweets"
-  rate <- 75 / (15 * 60)
+  rate <- c(75, 15 * 60)
   min_page_size <- 10
   max_page_size <- 100
 

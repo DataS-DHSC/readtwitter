@@ -19,7 +19,7 @@ users <- function(token,
                   .format = "parsed") {
   
   api <- "2/users"
-  rate <- 300 / (15 * 60)
+  rate <- c(300, 15 * 60)
   
   checkmate::assert_string(token) 
   checkmate::assert_character(user_ids)
