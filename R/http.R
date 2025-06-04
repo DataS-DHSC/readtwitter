@@ -35,6 +35,12 @@ api_is_transient <- function(resp) {
 #' @keywords internal
 api_after <- function(resp) {
   if (httr2::resp_status(resp) != 429) return(NULL)
+  
+  limit_remaining <- as.numeric(
+    httr2::resp_header(resp, "x-rate-limit-remaining")
+  )
+  if (limit_remaining > 0) return(NULL)
+  
   time <- as.numeric(httr2::resp_header(resp, "x-rate-limit-reset"))
   time - unclass(Sys.time())
 }
