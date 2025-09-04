@@ -40,7 +40,7 @@ user_tweets <- function(token,
   
   api_endpoint <- "/2/users/%s/tweets"
   max_n <- 3200
-  rate <- 1500 / (15 * 60)
+  rate <- NULL
   min_page_size <- 5
   max_page_size <- 100
   min_tweet_date <- as.Date("2010-11-06")
